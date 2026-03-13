@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RK Fashion</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f7f7f7;
+}
+
+/* HERO */
+
+.hero{
+height:90vh;
+background:url("https://i.ibb.co/JWvh3w1x/IMG-20260313-WA0041.jpg") center/cover;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+}
+
+.hero h1{
+font-size:50px;
+margin:0;
+}
+
+.hero p{
+font-size:20px;
+}
+
+.shop-btn{
+background:#ff4d6d;
+color:white;
+padding:15px 30px;
+border:none;
+font-size:18px;
+cursor:pointer;
+border-radius:30px;
+margin-top:20px;
+}
+
+/* PRODUCTS */
+
+.products{
+padding:40px 20px;
+}
+
+.products h2{
+text-align:center;
+}
+
+.carousel{
+display:flex;
+overflow-x:auto;
+gap:20px;
+padding:20px;
+}
+
+.card{
+min-width:220px;
+background:white;
+border-radius:10px;
+box-shadow:0 5px 10px rgba(0,0,0,0.1);
+padding:10px;
+text-align:center;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}
+
+.price{
+font-weight:bold;
+margin:10px 0;
+}
+
+.add{
+background:#28a745;
+color:white;
+border:none;
+padding:10px;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* CART */
+
+.cart-icon{
+position:fixed;
+top:20px;
+right:20px;
+background:black;
+color:white;
+padding:10px 15px;
+border-radius:50px;
+cursor:pointer;
+}
+
+.cart-count{
+background:red;
+padding:3px 7px;
+border-radius:50%;
+margin-left:5px;
+}
+
+/* CART PANEL */
+
+.cart-panel{
+position:fixed;
+right:-400px;
+top:0;
+width:300px;
+height:100%;
+background:white;
+box-shadow:-5px 0 10px rgba(0,0,0,0.2);
+padding:20px;
+transition:.4s;
+overflow:auto;
+}
+
+.cart-panel.active{
+right:0;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+.order-btn{
+background:#007bff;
+color:white;
+padding:10px;
+border:none;
+width:100%;
+cursor:pointer;
+}
+
+/* WHATSAPP */
+
+.whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+color:white;
+padding:15px;
+border-radius:50%;
+font-size:20px;
+text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="cart-icon" onclick="toggleCart()">
+🛒 Cart <span class="cart-count" id="count">0</span>
+</div>
+
+<div class="hero">
+<h1>RK Fashion</h1>
+<p>Fresh Finds, Best Prices</p>
+<button class="shop-btn" onclick="scrollProducts()">Shop Now</button>
+</div>
+
+<section class="products" id="products">
+
+<h2>Our Products</h2>
+
+<div class="carousel" id="product-list">
+
+</div>
+
+</section>
+
+<div class="cart-panel" id="cart">
+
+<h2>Your Cart</h2>
+
+<ul id="cartItems"></ul>
+
+<input id="name" placeholder="Customer Name">
+
+<input id="phone" placeholder="Phone Number">
+
+<button class="order-btn" onclick="sendEmail()">Place Order</button>
+
+</div>
+
+<a class="whatsapp" href="https://wa.me/+918777475575" target="_blank">💬</a>
+
+<script>
+
+const products=[
+{name:"Product 1",price:499,img:"https://i.ibb.co/mFC1D7Xv/1773397434489.png"},
+{name:"Product 2",price:599,img:"https://i.ibb.co/ym3g6V9J/1773398030785.png"},
+{name:"Product 3",price:699,img:"https://i.ibb.co/fV4x3fTP/IMG-20260313-WA0030.jpg"},
+{name:"Product 4",price:799,img:"https://i.ibb.co/nsMf54qc/IMG-20260313-WA0032.jpg"},
+{name:"Product 5",price:899,img:"https://i.ibb.co/9H7p6rKN/IMG-20260313-WA0036.jpg"},
+{name:"Product 6",price:999,img:"https://i.ibb.co/LDCVvMk7/1773399512077.png"},
+{name:"Product 7",price:1099,img:"https://i.ibb.co/xtVdWTM0/IMG-20260313-WA0039.jpg"},
+{name:"Product 8",price:1199,img:"https://i.ibb.co/qY0fvv7s/IMG-20260313-WA0033.jpg"}
+];
+
+const cart=[];
+
+const list=document.getElementById("product-list");
+
+products.forEach((p,i)=>{
+list.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<div class="price">₹${p.price}</div>
+<button class="add" onclick="addCart(${i})">Add to Cart</button>
+</div>
+`
+});
+
+function addCart(i){
+cart.push(products[i]);
+updateCart();
+}
+
+function updateCart(){
+
+document.getElementById("count").innerText=cart.length;
+
+let html="";
+
+cart.forEach(item=>{
+html+=`<li>${item.name} - ₹${item.price}</li>`;
+});
+
+document.getElementById("cartItems").innerHTML=html;
+
+}
+
+function toggleCart(){
+document.getElementById("cart").classList.toggle("active");
+}
+
+function scrollProducts(){
+document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+
+function sendEmail(){
+
+const name=document.getElementById("name").value;
+const phone=document.getElementById("phone").value;
+
+let items="";
+
+cart.forEach(i=>{
+items+=i.name+" - ₹"+i.price+"%0D%0A";
+});
+
+const mail=`mailto:mrigankakol59@gmail.com?subject=New Order RK Fashion&body=Customer Name: ${name}%0D%0APhone: ${phone}%0D%0AItems:%0D%0A${items}`;
+
+window.location.href=mail;
+
+}
+
+</script>
+
+</body>
+</html>
